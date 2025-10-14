@@ -17,6 +17,10 @@ public class GameState {
         this.cardsPositions = cardPositions;
     }
 
+    public int getScore() {
+        return score;
+    }
+
     public GameStatus getGameStatus() {
         return gameStatus;
     }
