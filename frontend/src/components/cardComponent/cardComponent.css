@@ -1,0 +1,51 @@
+.card {
+    width: 65px;
+    height: 65px;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #000000;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card.back {
+    background-color: #ccc;
+}
+
+.card.red {
+    background-color: #FF0000;
+}
+
+.card.green {
+    background-color: #00FF00;
+}
+
+.card.blue {
+    background-color: #0000FF;
+}
+
+.card.yellow {
+    background-color: #FFFF00;
+}
+
+.card.brown {
+    background-color: #A52A2A;
+}
+
+.card.purple {
+    background-color: #800080;
+}
+
+.card.white {
+    background-color: #FFFFFF;
+}
+
+.card.black {
+    background-color: #000000;
+}

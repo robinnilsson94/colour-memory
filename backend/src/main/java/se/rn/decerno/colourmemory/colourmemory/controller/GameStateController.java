@@ -9,6 +9,7 @@ import se.rn.decerno.colourmemory.colourmemory.model.GameStatus;
 import se.rn.decerno.colourmemory.colourmemory.service.GameService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/game")
 public class GameStateController {
 

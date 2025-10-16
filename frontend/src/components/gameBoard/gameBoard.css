@@ -1,0 +1,12 @@
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(4, 90px);
+    grid-template-rows: repeat(4, 100px);
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.game-board.locked {
+    pointer-events: none;
+}
+
