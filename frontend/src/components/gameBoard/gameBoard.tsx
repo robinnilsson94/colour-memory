@@ -24,6 +24,7 @@ const GameBoard: React.FC<GameBoardProps> = ({gameState, onFlipCard}) => {
 
         await onFlipCard(position);
 
+        // Lock board for 2 seconds after second card is flipped to prevent further clicks
         if (updatedFlippedPositions.length === 2) {
             setIsLocked(true);
             setTimeout(() => {
@@ -33,6 +34,7 @@ const GameBoard: React.FC<GameBoardProps> = ({gameState, onFlipCard}) => {
         }
     };
 
+    // Show matched cards for 2 seconds before removing them from the board
     useEffect(() => {
         const newlyMatched = Object.values(gameState.cardsPositions)
             .filter(card => card.matched && !removedCardIds.has(card.id));

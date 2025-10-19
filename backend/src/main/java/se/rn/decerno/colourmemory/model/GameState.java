@@ -1,6 +1,7 @@
 package se.rn.decerno.colourmemory.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,14 +12,8 @@ public class GameState {
     private int numberOfMatches;
     private double accuracy;
     private GameStatus gameStatus;
-    private Map<Integer, Card> cardsPositions;
+    private Map<Integer, Card> cardsPositions = new HashMap<>();
     private final List<Card> flippedCards = new ArrayList<>();
-
-    public GameState(int score, GameStatus gameStatus, Map<Integer, Card> cardPositions) {
-        this.score = score;
-        this.gameStatus = gameStatus;
-        this.cardsPositions = cardPositions;
-    }
 
     public int getScore() {
         return score;

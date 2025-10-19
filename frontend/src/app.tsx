@@ -24,6 +24,10 @@ const App: React.FC = () => {
         return updated;
     };
 
+    const formatAccuracy = (accuracy: number | null): string => {
+        return accuracy != null ? (accuracy * 100).toFixed(1) : '0';
+    };
+
     if (!started) {
         return (
             <div className="center-align">
@@ -49,7 +53,7 @@ const App: React.FC = () => {
             <div className="game-stats">
                 <h3>Score: {gameState.score}</h3>
                 <h4>Flips: {gameState.moveCount}</h4>
-                <h4>Accuracy: {gameState.accuracy != null ? (gameState.accuracy * 100).toFixed(1) : 0}%</h4>
+                <h4>Accuracy: {formatAccuracy(gameState.accuracy)}%</h4>
             </div>
 
             <GameBoard gameState={gameState} onFlipCard={handleFlipCard}/>
@@ -61,7 +65,7 @@ const App: React.FC = () => {
                         <h2>Game finished!</h2>
                         <p>Your score: {gameState.score}</p>
                         <p>Flips: {gameState.moveCount}</p>
-                        <p>Accuracy: {gameState.accuracy != null ? (gameState.accuracy * 100).toFixed(1) : 0}%</p>
+                        <p>Accuracy: {formatAccuracy(gameState.accuracy)}%</p>
                         <button onClick={handleStartGame}>Start a new game</button>
                     </div>
                 </>

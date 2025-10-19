@@ -16,16 +16,24 @@ public class GameService {
     private GameState gameState;
 
     public GameState startGame() {
-        gameState = new GameState(0, GameStatus.IN_PROGRESS, new HashMap<>());
+        gameState = new GameState();
+        gameState.setGameStatus(GameStatus.IN_PROGRESS);
 
         createCardsAndShuffle();
 
         return gameState;
     }
 
+    /**
+     * Flips a card at the given position. If two cards are flipped, they are compared.
+     *
+     * @param position the position of the card to flip (0-15)
+     * @return the updated game state
+     */
     public GameState flipCard(int position) {
         Card card = gameState.getCardsPositions().get(position);
 
+        // Ignore if the card doesn't exist, is already matched, or is already flipped
         if (card == null || card.isMatched() || gameState.getFlippedCards().contains(card)) {
             return gameState;
         }
@@ -49,6 +57,7 @@ public class GameService {
     private void createCardsAndShuffle() {
         List<Card> cards = new ArrayList<>();
 
+        // Create two cards for each color (pairs)
         for (Color color : Color.values()) {
             cards.add(new Card(UUID.randomUUID().toString(), color));
             cards.add(new Card(UUID.randomUUID().toString(), color));
@@ -56,6 +65,7 @@ public class GameService {
 
         Collections.shuffle(cards);
 
+        // Assign shuffled cards to grid positions
         Map<Integer, Card> cardPositions = new HashMap<>();
         for (int i = 0; i < GRID_SIZE; i++) {
             cardPositions.put(i, cards.get(i));
@@ -64,6 +74,10 @@ public class GameService {
         gameState.setCardsPositions(cardPositions);
     }
 
+    /**
+     * Compares two flipped cards. If they match, marks them as matched and increments score.
+     * If they don't match, decrements score. Updates accuracy and clears flipped cards.
+     */
     private void compareCardsAndUpdateGameState(Card card1, Card card2) {
         if (card1.getColor() == card2.getColor()) {
             gameState.incrementScore();
@@ -72,6 +86,7 @@ public class GameService {
 
             gameState.incrementNumberOfMatches();
 
+            // Game finishes if all cards are matched
             boolean allMatched = gameState.getCardsPositions().values().stream()
                     .allMatch(Card::isMatched);
 
@@ -82,7 +97,7 @@ public class GameService {
             gameState.reduceScore();
         }
 
-        // Accuracy is calculated by dividing the number of matches with the number of comparisons made (2 moves means 1 comparison)
+        // Accuracy = successful matches / total attempts (2 moves = 1 attempt)
         gameState.setAccuracy((double) gameState.getNumberOfMatches() / ((double) gameState.getMoveCount() / 2));
         gameState.getFlippedCards().clear();
     }

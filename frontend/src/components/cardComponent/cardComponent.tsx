@@ -9,9 +9,12 @@ interface CardComponentProps {
 }
 
 const CardComponent: React.FC<CardComponentProps> = ({card, isFlipped, onClick}) => {
-    return <div className={`card ${isFlipped ? card.color.toLowerCase() : "back"}`}
-                onClick={onClick}
-    />;
+    return (
+        <div
+            className={`card ${isFlipped ? card.color.toLowerCase() : "back"}`}
+            onClick={onClick}
+        />
+    );
 };
 
 export default CardComponent;
