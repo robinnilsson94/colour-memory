@@ -28,8 +28,7 @@ public class GameStateController {
         if (gameState == null || gameState.getGameStatus() != GameStatus.IN_PROGRESS) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game has not been started yet");
         }
-
-        if (position < 0 || position >= 16) {
+        if (position < 0 || position >= gameState.getCardsPositions().size()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid position");
         }
 

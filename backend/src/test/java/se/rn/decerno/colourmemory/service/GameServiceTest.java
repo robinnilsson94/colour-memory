@@ -14,6 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameServiceTest {
 
+    public static final int NO_OF_CARDS = 16;
+
     private GameService gameService;
 
     @BeforeEach
@@ -27,7 +29,7 @@ class GameServiceTest {
 
         assertNotNull(state, "GameState should not be null");
         assertEquals(GameStatus.IN_PROGRESS, state.getGameStatus());
-        assertEquals(16, state.getCardsPositions().size(), "Should create 16 cards");
+        assertEquals(NO_OF_CARDS, state.getCardsPositions().size(), "Should create " + NO_OF_CARDS + " cards");
         assertEquals(0, state.getScore(), "Initial score should be 0");
     }
 
@@ -45,19 +47,10 @@ class GameServiceTest {
         GameState state = gameService.getGameState();
         Map<Integer, Card> cardsPositions = state.getCardsPositions();
 
-        List<Card> matchingBlackCards = cardsPositions.values().stream()
-                .filter(card -> card.getColor() == Color.BLACK)
-                .limit(2)
-                .toList();
+        CardPair blackCardPositions = findMatchingBlackCardsAndMatchThem(cardsPositions);
 
-        int pos1 = findPositionOfCard(cardsPositions, matchingBlackCards.get(0));
-        int pos2 = findPositionOfCard(cardsPositions, matchingBlackCards.get(1));
-
-        gameService.flipCard(pos1);
-        gameService.flipCard(pos2);
-
-        assertTrue(cardsPositions.get(pos1).isMatched());
-        assertTrue(cardsPositions.get(pos2).isMatched());
+        assertTrue(cardsPositions.get(blackCardPositions.first).isMatched());
+        assertTrue(cardsPositions.get(blackCardPositions.second).isMatched());
         assertEquals(GameStatus.IN_PROGRESS, state.getGameStatus());
         assertEquals(1, state.getScore(), "Score should increase after matching pair");
         assertEquals(0, state.getFlippedCards().size(), "Flipped cards should be cleared after matching pair");
@@ -68,14 +61,17 @@ class GameServiceTest {
     void flipCard_different_colors_should_reduce_score_and_reset_flipped_cards() {
         gameService.startGame();
         GameState state = gameService.getGameState();
-        state.incrementScore();
+
+        findMatchingBlackCardsAndMatchThem(state.getCardsPositions());
+
+        assertEquals(1, state.getScore(), "Score should increase after matching a pair");
 
         Map<Integer, Card> cards = state.getCardsPositions();
-        int first = 0;
-        int second = findDifferentColor(cards, cards.get(first).getColor());
+        int unmatchedCardPosition = findUnmatchedCardPosition(state.getCardsPositions());
+        int nonMatchingPosition = findDifferentColorUnmatched(cards, cards.get(unmatchedCardPosition).getColor());
 
-        gameService.flipCard(first);
-        gameService.flipCard(second);
+        gameService.flipCard(unmatchedCardPosition);
+        gameService.flipCard(nonMatchingPosition);
 
         assertEquals(0, state.getScore(), "Score should decrease on mismatch");
         assertEquals(0, state.getFlippedCards().size(), "Flipped cards should be cleared after mismatch");
@@ -111,10 +107,36 @@ class GameServiceTest {
                 .orElseThrow();
     }
 
-    private int findDifferentColor(Map<Integer, Card> cardPositions, Color colorToExclude) {
-        return cardPositions.entrySet().stream().filter(e -> !e.getValue().getColor().equals(colorToExclude))
+    private int findUnmatchedCardPosition(Map<Integer, Card> cards) {
+        return cards.entrySet().stream().filter(e -> !e.getValue().isMatched())
                 .map(Map.Entry::getKey)
                 .findFirst()
                 .orElseThrow();
+    }
+
+    private int findDifferentColorUnmatched(Map<Integer, Card> cardPositions, Color colorToExclude) {
+        return cardPositions.entrySet().stream().filter(e -> !e.getValue().getColor().equals(colorToExclude)
+                        && !e.getValue().isMatched())
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElseThrow();
+    }
+
+    private record CardPair(int first, int second) {
+    }
+
+    private CardPair findMatchingBlackCardsAndMatchThem(Map<Integer, Card> cardPositions) {
+        List<Card> matchingBlackCards = cardPositions.values().stream()
+                .filter(card -> card.getColor() == Color.BLACK)
+                .limit(2)
+                .toList();
+
+        int pos1 = findPositionOfCard(cardPositions, matchingBlackCards.get(0));
+        int pos2 = findPositionOfCard(cardPositions, matchingBlackCards.get(1));
+
+        gameService.flipCard(pos1);
+        gameService.flipCard(pos2);
+
+        return new CardPair(pos1, pos2);
     }
 }

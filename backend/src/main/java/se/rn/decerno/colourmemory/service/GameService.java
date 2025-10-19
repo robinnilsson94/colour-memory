@@ -36,7 +36,7 @@ public class GameService {
         flippedCards.add(card);
 
         if (flippedCards.size() == 2) {
-            compareCards(flippedCards);
+            compareCardsAndUpdateGameState(flippedCards.get(0), flippedCards.get(1));
         }
 
         return gameState;
@@ -64,10 +64,7 @@ public class GameService {
         gameState.setCardsPositions(cardPositions);
     }
 
-    private void compareCards(List<Card> cards) {
-        Card card1 = cards.get(0);
-        Card card2 = cards.get(1);
-
+    private void compareCardsAndUpdateGameState(Card card1, Card card2) {
         if (card1.getColor() == card2.getColor()) {
             gameState.incrementScore();
             card1.setMatched(true);
