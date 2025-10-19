@@ -1,10 +1,10 @@
-package se.rn.decerno.colourmemory.colourmemory.service;
+package se.rn.decerno.colourmemory.service;
 
 import org.springframework.stereotype.Service;
-import se.rn.decerno.colourmemory.colourmemory.model.Card;
-import se.rn.decerno.colourmemory.colourmemory.model.Color;
-import se.rn.decerno.colourmemory.colourmemory.model.GameState;
-import se.rn.decerno.colourmemory.colourmemory.model.GameStatus;
+import se.rn.decerno.colourmemory.model.Card;
+import se.rn.decerno.colourmemory.model.Color;
+import se.rn.decerno.colourmemory.model.GameState;
+import se.rn.decerno.colourmemory.model.GameStatus;
 
 import java.util.*;
 
@@ -39,14 +39,6 @@ public class GameService {
     }
 
     public GameState getGameState() {
-        return gameState;
-    }
-
-    public GameState endGame() {
-        if (gameState != null) {
-            gameState.setGameStatus(GameStatus.ABORTED);
-        }
-
         return gameState;
     }
 

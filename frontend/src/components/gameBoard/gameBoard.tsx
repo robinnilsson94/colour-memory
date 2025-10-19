@@ -15,7 +15,9 @@ const GameBoard: React.FC<GameBoardProps> = ({gameState, onFlipCard}) => {
     const [removedCards, setRemovedCards] = useState<Set<string>>(new Set());
 
     const handleFlip = async (position: number) => {
-        if (isLocked || flipped.includes(position)) return;
+        if (isLocked || flipped.includes(position)){
+            return;
+        }
 
         await onFlipCard(position);
         setFlipped(prev => [...prev, position]);

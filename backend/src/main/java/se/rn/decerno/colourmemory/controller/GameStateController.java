@@ -1,12 +1,12 @@
-package se.rn.decerno.colourmemory.colourmemory.controller;
+package se.rn.decerno.colourmemory.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import se.rn.decerno.colourmemory.colourmemory.model.GameState;
+import se.rn.decerno.colourmemory.model.GameState;
 import org.springframework.beans.factory.annotation.Autowired;
-import se.rn.decerno.colourmemory.colourmemory.model.GameStatus;
-import se.rn.decerno.colourmemory.colourmemory.service.GameService;
+import se.rn.decerno.colourmemory.model.GameStatus;
+import se.rn.decerno.colourmemory.service.GameService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -19,11 +19,6 @@ public class GameStateController {
     @PostMapping("/start")
     public GameState startGame() {
         return gameService.startGame();
-    }
-
-    @PostMapping("/end")
-    public GameState endGame() {
-        return gameService.endGame();
     }
 
     @PostMapping("/flip/{position}")
@@ -39,10 +34,5 @@ public class GameStateController {
         }
 
         return gameService.flipCard(position);
-    }
-
-    @GetMapping("/state")
-    public GameState getGameState() {
-        return gameService.getGameState();
     }
 }

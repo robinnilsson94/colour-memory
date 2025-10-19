@@ -28,7 +28,7 @@ const App: React.FC = () => {
         return (
             <div className="center-align">
                 <div className="center-align">
-                    <img src="/resources/colourMemory.png" alt="Colour Memory" className="small-image"/>
+                    <img src="/public/colourMemory.png" alt="Colour Memory" className="small-image"/>
                 </div>
                 <button onClick={handleStartGame}>Start</button>
             </div>
@@ -42,7 +42,7 @@ const App: React.FC = () => {
     return (
         <div className="center-align">
             <div className="center-align">
-                <img src="/resources/colourMemory.png" alt="Colour Memory" className="small-image"/>
+                <img src="/public/colourMemory.png" alt="Colour Memory" className="small-image"/>
             </div>
             <button onClick={handleStartGame}>Restart</button>
             <h3>Score: {gameState.score}</h3>

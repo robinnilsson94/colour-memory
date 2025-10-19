@@ -1,4 +1,4 @@
-package se.rn.decerno.colourmemory.colourmemory.model;
+package se.rn.decerno.colourmemory.model;
 
 import java.util.ArrayList;
 import java.util.List;

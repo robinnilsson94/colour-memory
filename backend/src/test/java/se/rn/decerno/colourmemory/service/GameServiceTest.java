@@ -1,11 +1,11 @@
-package se.rn.decerno.colourmemory.colourmemory.service;
+package se.rn.decerno.colourmemory.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import se.rn.decerno.colourmemory.colourmemory.model.Card;
-import se.rn.decerno.colourmemory.colourmemory.model.Color;
-import se.rn.decerno.colourmemory.colourmemory.model.GameState;
-import se.rn.decerno.colourmemory.colourmemory.model.GameStatus;
+import se.rn.decerno.colourmemory.model.Card;
+import se.rn.decerno.colourmemory.model.Color;
+import se.rn.decerno.colourmemory.model.GameState;
+import se.rn.decerno.colourmemory.model.GameStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -82,14 +82,6 @@ class GameServiceTest {
     }
 
     @Test
-    void endGame_should_set_status_to_aborted() {
-        gameService.startGame();
-        GameState ended = gameService.endGame();
-
-        assertEquals(GameStatus.ABORTED, ended.getGameStatus());
-    }
-
-    @Test
     void game_should_finish_when_all_cards_are_matched() {
         gameService.startGame();
         GameState state = gameService.getGameState();
@@ -112,14 +104,12 @@ class GameServiceTest {
         assertEquals(GameStatus.FINISHED, state.getGameStatus());
     }
 
-
     private int findPositionOfCard(Map<Integer, Card> cardPositions, Card card) {
         return cardPositions.entrySet().stream().filter(e -> e.getValue().equals(card))
                 .map(Map.Entry::getKey)
                 .findFirst()
                 .orElseThrow();
     }
-
 
     private int findDifferentColor(Map<Integer, Card> cardPositions, Color colorToExclude) {
         return cardPositions.entrySet().stream().filter(e -> !e.getValue().getColor().equals(colorToExclude))

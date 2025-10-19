@@ -1,4 +1,4 @@
-package se.rn.decerno.colourmemory.colourmemory;
+package se.rn.decerno.colourmemory;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
