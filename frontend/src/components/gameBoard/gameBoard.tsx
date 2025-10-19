@@ -9,23 +9,25 @@ interface GameBoardProps {
 }
 
 const GameBoard: React.FC<GameBoardProps> = ({gameState, onFlipCard}) => {
-    const [flipped, setFlipped] = useState<number[]>([]);
+    const [flippedPositions, setFlippedPositions] = useState<number[]>([]);
     const [isLocked, setIsLocked] = useState(false);
-    const [temporarilyVisible, setTemporarilyVisible] = useState<Set<string>>(new Set());
-    const [removedCards, setRemovedCards] = useState<Set<string>>(new Set());
+    const [temporarilyVisibleIds, setTemporarilyVisibleIds] = useState<Set<string>>(new Set());
+    const [removedCardIds, setRemovedCardIds] = useState<Set<string>>(new Set());
 
     const handleFlip = async (position: number) => {
-        if (isLocked || flipped.includes(position)){
+        if (isLocked || flippedPositions.includes(position)) {
             return;
         }
 
-        await onFlipCard(position);
-        setFlipped(prev => [...prev, position]);
+        const updatedFlippedPositions = [...flippedPositions, position];
+        setFlippedPositions(updatedFlippedPositions);
 
-        if (flipped.length === 1) {
+        await onFlipCard(position);
+
+        if (updatedFlippedPositions.length === 2) {
             setIsLocked(true);
             setTimeout(() => {
-                setFlipped([]);
+                setFlippedPositions([]);
                 setIsLocked(false);
             }, 2000);
         }
@@ -33,35 +35,27 @@ const GameBoard: React.FC<GameBoardProps> = ({gameState, onFlipCard}) => {
 
     useEffect(() => {
         const newlyMatched = Object.values(gameState.cardsPositions)
-            .filter(card => card.matched && !removedCards.has(card.id));
+            .filter(card => card.matched && !removedCardIds.has(card.id));
 
         if (newlyMatched.length > 0) {
-            const newTemp = new Set(temporarilyVisible);
-            newlyMatched.forEach(c => newTemp.add(c.id));
-            setTemporarilyVisible(newTemp);
+            const matchedIds = newlyMatched.map(c => c.id);
+            setTemporarilyVisibleIds(temporarilyVisible => new Set([...temporarilyVisible, ...matchedIds]));
 
-            setTimeout(() => {
-                setRemovedCards(prev => {
-                    const next = new Set(prev);
-                    newlyMatched.forEach(c => next.add(c.id));
-                    return next;
-                });
-                setTemporarilyVisible(prev => {
-                    const next = new Set(prev);
-                    newlyMatched.forEach(c => next.delete(c.id));
-                    return next;
-                });
+            const timer = setTimeout(() => {
+                setRemovedCardIds(alreadyRemoved => new Set([...alreadyRemoved, ...matchedIds]));
+                setTemporarilyVisibleIds(temporarilyVisible => new Set([...temporarilyVisible].filter(id => !matchedIds.includes(id))));
             }, 2000);
+            return () => clearTimeout(timer);
         }
-    }, [gameState]);
+    }, [gameState.cardsPositions]);
 
     return (
         <div className={`game-board ${isLocked ? "locked" : ""}`}>
             {Object.entries(gameState.cardsPositions).map(([position, card]) => {
-                const pos = Number(position);
+                const positionNumber = Number(position);
 
-                const isRemoved = removedCards.has(card.id);
-                const isFlipped = flipped.includes(pos) || temporarilyVisible.has(card.id);
+                const isRemoved = removedCardIds.has(card.id);
+                const isFlipped = flippedPositions.includes(positionNumber) || temporarilyVisibleIds.has(card.id);
 
                 return isRemoved ? (
                     <div key={card.id}/>
@@ -70,7 +64,7 @@ const GameBoard: React.FC<GameBoardProps> = ({gameState, onFlipCard}) => {
                         key={card.id}
                         card={card}
                         isFlipped={isFlipped}
-                        onClick={() => handleFlip(pos)}
+                        onClick={() => handleFlip(positionNumber)}
                     />
                 );
             })}
