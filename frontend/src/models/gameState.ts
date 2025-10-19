@@ -3,6 +3,8 @@ import type {GameStatus} from "./gameStatus.ts";
 
 export interface GameState {
     score: number;
+    moveCount: number;
+    accuracy: number;
     gameStatus: GameStatus;
     cardsPositions: { [key: number]: Card };
     flippedCards: Card[];

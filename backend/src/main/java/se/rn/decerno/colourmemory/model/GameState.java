@@ -7,6 +7,9 @@ import java.util.Map;
 public class GameState {
 
     private int score;
+    private int moveCount;
+    private int numberOfMatches;
+    private double accuracy;
     private GameStatus gameStatus;
     private Map<Integer, Card> cardsPositions;
     private final List<Card> flippedCards = new ArrayList<>();
@@ -19,6 +22,22 @@ public class GameState {
 
     public int getScore() {
         return score;
+    }
+
+    public int getMoveCount() {
+        return moveCount;
+    }
+
+    public int getNumberOfMatches() {
+        return numberOfMatches;
+    }
+
+    public double getAccuracy() {
+        return accuracy;
+    }
+
+    public void setAccuracy(double accuracy) {
+        this.accuracy = accuracy;
     }
 
     public GameStatus getGameStatus() {
@@ -49,5 +68,13 @@ public class GameState {
         if (score > 0) {
             score--;
         }
+    }
+
+    public void incrementMoveCount() {
+        moveCount++;
+    }
+
+    public void incrementNumberOfMatches() {
+        numberOfMatches++;
     }
 }

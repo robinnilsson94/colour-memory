@@ -11,6 +11,8 @@ import java.util.*;
 @Service
 public class GameService {
 
+    public static final int GRID_SIZE = 16;
+
     private GameState gameState;
 
     public GameState startGame() {
@@ -27,6 +29,8 @@ public class GameService {
         if (card == null || card.isMatched() || gameState.getFlippedCards().contains(card)) {
             return gameState;
         }
+
+        gameState.incrementMoveCount();
 
         List<Card> flippedCards = gameState.getFlippedCards();
         flippedCards.add(card);
@@ -53,7 +57,7 @@ public class GameService {
         Collections.shuffle(cards);
 
         Map<Integer, Card> cardPositions = new HashMap<>();
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < GRID_SIZE; i++) {
             cardPositions.put(i, cards.get(i));
         }
 
@@ -69,17 +73,20 @@ public class GameService {
             card1.setMatched(true);
             card2.setMatched(true);
 
+            gameState.incrementNumberOfMatches();
+
             boolean allMatched = gameState.getCardsPositions().values().stream()
                     .allMatch(Card::isMatched);
 
             if (allMatched) {
                 gameState.setGameStatus(GameStatus.FINISHED);
             }
-
         } else {
             gameState.reduceScore();
         }
 
+        // Accuracy is calculated by dividing the number of matches with the number of comparisons made (2 moves means 1 comparison)
+        gameState.setAccuracy((double) gameState.getNumberOfMatches() / ((double) gameState.getMoveCount() / 2));
         gameState.getFlippedCards().clear();
     }
 }
